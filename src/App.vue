@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" @mousemove="mousemove">
     <header>
       <h1>Music App</h1>
     </header>
@@ -7,7 +7,6 @@
       <section class="player">
         <h2 class="song-title">{{ current.title }}</h2>
         <h3 class="song-artist"> {{ current.artist }}</h3>
-
         <div class="controls">
           <button class="prev" @click="prev">Prev</button>
           <button class="play" v-if="!isPlaying" @click="play">Play</button>
@@ -15,8 +14,8 @@
           <button class="next" @click="next">Next</button>
         </div>
       </section>
-
-      <section class="playlist">
+    </main>
+    <section class="playlist">
         <h3>The Playlist</h3>
         <button 
         v-for="song in songs" 
@@ -27,15 +26,52 @@
         </button>
       </section>
 
-    </main>
+      <section class="main-artist">
+        <div class="artist">
+          <Artist 
+          v-for="artist in artists"
+          :key="artist.color"
+          :artist="artist"
+          />
+        </div>
+      </section>
   </div>
 </template>
 
 <script>
+import Artist from './components/Artist';
 export default {
   name: 'App',
+  components: {
+    Artist
+  },
   data () {
     return {
+      artists:[
+        {
+          title: 'Adele',
+          color: 'green',
+          bgtext: 'A D L',
+          src: require('./assets/adele.png')
+        },
+        {
+          title: 'Lyna',
+          color: 'blue',
+          bgtext: 'L Y N',
+          src: require('./assets/lyna.png')
+        },
+        {
+          title: 'TOM',
+          color: 'pink',
+          bgtext: 'TOM',
+          src: require('./assets/saymyname.png')
+        }
+      ],
+
+
+
+
+
       current: {},
       index: 0,
       isPlaying: false,
@@ -82,6 +118,32 @@ export default {
       }
       this.current = this.songs[this.index];
       this.play(this.current);
+    },
+    mousemove(e) {
+      let mouseX = e.mouseX;
+      let mouseY = e.mouseY;
+
+      let artists = document.querySelectorAll('.artists .artist');
+      for(let a = 0; a < artists.length; ++a){
+        let artist = artists[a];
+
+        let artist_image = artist.querySelector('.artist-image-wrap');
+
+        let img_x = mouseX - this.coords(artist_image).x;
+        let img_y = mouseY - this.coords(artist_image).y;
+
+        artist_image.style.transform = `translateY(-${img_y/20}px) translateX(-${img_x/20}px) translateZ(100px)`;
+        let bgtext = artist.querySelector('.bg-text');
+        let bg_x = mouseX - this.coords(bgtext).x;
+        bgtext.style.transform = `translateX(${bg_x/25}px)`;
+      }
+    },
+    coords (el) {
+      let coords = el.getBoundingClientRect();
+      return {
+        x: coords.left / 2,
+        y: coords.top / 2
+      }
     }
   },
   created() {
@@ -119,15 +181,16 @@ header {
   background-size: cover;
   background-position: bottom;
   transition: 0.4 ease;
+  min-height: 100vh;
 }
 main {
-  min-height: 100vh;
+  
   background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.75));
   padding: 25px;
 }
 
 .song-title {
-  color: #8c306b;
+  color: #b9719f;
   font-size: 32px;
   font-weight: 700;
   text-transform: uppercase;
@@ -139,7 +202,7 @@ main {
 }
 
 .song-artist {
-  color: #8c306b;
+  color: #dc77b8;
   font-size: 20px;
   font-weight: 400;
   text-align: center;
@@ -203,5 +266,21 @@ button:hover {
 .playlist .song.playing {
   color: #FFF;
   background-image: linear-gradient(to right, #8c306b, #8a2f5a);
+}
+
+.main-artist {
+  width: 100vw;
+  background-color:#bb408b;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.artist{
+  font-size: 18px;
+  color:#FFF;
+  display: flex;
+  max-width: 1280px;
+  padding: 25px;
+  margin: 0 auto;
 }
 </style>
