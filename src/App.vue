@@ -1,7 +1,8 @@
 <template>
   <div id="app" @mousemove="mousemove">
     <header>
-      <h1>Music App</h1>
+      <Navbar />
+
     </header>
     <main>
       <section class="player">
@@ -40,10 +41,12 @@
 
 <script>
 import Artist from './components/Artist';
+import Navbar from './components/Navbar';
 export default {
   name: 'App',
   components: {
-    Artist
+    Artist,
+    Navbar
   },
   data () {
     return {
@@ -169,13 +172,13 @@ body{
   font-family: 'Open Sans', 'Helvetica Neue', sans-serif;
 }
 header {
-	display: flex;
-	justify-content: center;
+  width: 100vw;
 	align-items: center;
-	padding: 15px;    
+	padding: 25px;    
   background-color: #8c306b;
   color: #ffeaea;
 }
+
 #app {
   background-image: url('./assets/warm-bg.jpg');
   background-size: cover;
@@ -283,4 +286,9 @@ button:hover {
   padding: 25px;
   margin: 0 auto;
 }
+
+/* Navbar CSS */
+
+
+
 </style>
